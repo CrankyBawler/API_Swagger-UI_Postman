@@ -2,34 +2,33 @@ package pro.sky.API.SwaggerUI.Postman.Service;
 
 import org.springframework.stereotype.Service;
 import pro.sky.API.SwaggerUI.Postman.Model.Student;
+import pro.sky.API.SwaggerUI.Postman.Repository.StudentRepository;
 
 import java.util.HashMap;
 @Service
 public class StudentServiceImpl implements StudentService {
 
-    private final HashMap<Long, Student> students = new HashMap<>();
-    private long count = 0;
+    private final StudentRepository studentRepository;
+
+    public StudentServiceImpl(StudentRepository studentRepository) {
+        this.studentRepository = studentRepository;
+    }
 
     public Student addStudent(Student student) {
-        student.setId(count++);
-        students.put(student.getId(), student);
-        return student;
+        return studentRepository.save(student);
     }
 
     public Student findStudent(long id) {
-        return students.get(id);
+        return studentRepository.getById(id);
     }
 
-    public Student editStudent(long id, Student student) {
-        if (!students.containsKey(id)) {
-            return null;
-        }
-        students.put(id, student);
-        return student;
+    public Student editStudent(Student student) {
+        return studentRepository.save(student);
     }
 
     public void deleteStudent(long id) {
-        students.remove(id);
+
+        studentRepository.deleteById(id);
     }
 
 }
